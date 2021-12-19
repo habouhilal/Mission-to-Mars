@@ -12,13 +12,12 @@ def scrape_all():
     browser = Browser('chrome', **executable_path, headless=True)
 
     news_title, news_paragraph = mars_news(browser)
-    D_hemisphere = mars_hemisphere(browser)
 
     # Run all scraping functions and store results in a dictionary
     data = {
         "news_title": news_title,
         "news_paragraph": news_paragraph,
-        "hemisphere": D_hemisphere(browser),
+        "hemispheres": mars_hemisphere(browser),
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
         "last_modified": dt.datetime.now()
@@ -63,6 +62,11 @@ def mars_hemisphere(browser):
 
     # Optional delay for loading the page
     browser.is_element_present_by_css('div.list_text', wait_time=1)
+
+    # Convert the browser html to a soup object and then quit the browser
+    html = browser.html
+    hemi_soup = soup(html, 'html.parser')
+
     # create a list of images and title 
     D_hemisphere = []
     # loop to fine the images and titles 
